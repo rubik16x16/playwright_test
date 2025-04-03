@@ -4,3 +4,4 @@
 node_modules
 .venv
 .coverage
+chromedriver-linux64
