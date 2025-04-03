@@ -1,0 +1,31 @@
+{
+  "pylint.args": [
+    "--load-plugins=pylint_django",
+    "--indent-string='\t'",
+    "--disable=C0114",
+    "--disable=C0103",
+    "--disable=C0116",
+    "--disable=C0115"
+  ],
+  "python.analysis.autoImportCompletions": true,
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.defaultInterpreterPath": "/app/.venv/bin/python",
+  "editorconfig.generateAuto": false,
+  "editor.rulers": [80],
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.indentSize": "tabSize",
+    "editor.defaultFormatter": "eeyore.yapf",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": false,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "yapf.args": ["--style", ".style.yapf"],
+  "testing.gutterEnabled": true
+}

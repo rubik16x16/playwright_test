@@ -1,0 +1,7 @@
+[style]
+based_on_style = pep8
+use_tabs = true
+column_limit = 80
+continuation_align_style = valign-right
+dedent_closing_brackets = true
+allow_split_before_dict_value = false

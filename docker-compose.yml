@@ -1,0 +1,24 @@
+version: "2.4"
+services:
+    app:
+        container_name: playwright_app
+        build:
+            context: .
+            dockerfile: Dockerfile.app
+        image: playwright_app
+        working_dir: /app
+        extra_hosts:
+          - "host.docker.internal:host-gateway"
+        command: sh
+        tty: true
+        volumes:
+            - app:/app
+        networks:
+            - app
+
+networks:
+    app:
+        driver: bridge
+
+volumes:
+    app:
