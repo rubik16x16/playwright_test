@@ -8,7 +8,7 @@ services:
         image: playwright_app
         working_dir: /app
         extra_hosts:
-          - "host.docker.internal:host-gateway"
+            - "host.docker.internal:host-gateway"
         command: sh
         tty: true
         volumes:
