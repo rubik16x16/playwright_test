@@ -26,12 +26,15 @@ try:
 	element = driver.find_element(By.TAG_NAME, 'h1')
 	print('Heading:', element.text)
 
+	action_chains = ActionChains(driver)
+
 	booking_button = driver.find_element(
 		By.CSS_SELECTOR,
 		'.roi-search-engine__field.roi-search-engine__field--action'
 	)
 
-	ActionChains(driver).move_to_element(booking_button).click().perform()
+	action_chains.move_to_element(booking_button)
+	action_chains.click(booking_button).perform()
 
 	calendar = WebDriverWait(driver, TIMEOUT).until(
 		EC.presence_of_element_located((By.CSS_SELECTOR, '.nd-calendario'))
@@ -52,7 +55,8 @@ try:
 
 	day_from = calendar_days[0]
 
-	ActionChains(driver).move_to_element(day_from).click(day_from).perform()
+	action_chains.move_to_element(day_from)
+	action_chains.click(day_from).perform()
 
 	action_btns = driver.find_element(
 		By.CSS_SELECTOR, '#calendario-nodispo-botones-acciones'
@@ -68,7 +72,9 @@ try:
 		)
 	)
 
-	driver.get_screenshot_as_file('/app/screenshots/success/foo.png')
+	driver.get_screenshot_as_file(
+		'/app/screenshots/success/1-click_day_from.png'
+	)
 
 	calendar_days = WebDriverWait(calendar_first_frame, TIMEOUT).until(
 		EC.presence_of_all_elements_located(
@@ -81,15 +87,29 @@ try:
 
 	day_to = calendar_days[0]
 
-	ActionChains(driver).move_to_element(day_to).click(day_to).perform()
+	action_chains.move_to_element(day_to)
+	action_chains.click(day_to).perform()
 
-	WebDriverWait(action_btns, TIMEOUT).until(
+	send_form_btn = WebDriverWait(action_btns, TIMEOUT).until(
 		EC.visibility_of_element_located(
 			(By.CSS_SELECTOR, '.send-form.spinner.js-nodispo-book-nodispo')
 		)
 	)
 
-	driver.get_screenshot_as_file('/app/screenshots/success/bar.png')
+	driver.get_screenshot_as_file('/app/screenshots/success/2-click_day_to.png')
+
+	action_chains.move_to_element(send_form_btn)
+	action_chains.click(send_form_btn).perform()
+
+	available_rooms = WebDriverWait(driver, TIMEOUT).until(
+		EC.presence_of_element_located(
+			(By.CSS_SELECTOR, '[data-testid="fn-availability-rooms"]')
+		)
+	)
+
+	driver.get_screenshot_as_file(
+		'/app/screenshots/success/2-send-form-and-get-available-rooms.png'
+	)
 
 finally:
 	driver.get_screenshot_as_file('/app/screenshots/error/foo.png')
