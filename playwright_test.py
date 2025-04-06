@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
@@ -123,13 +125,14 @@ def find_availability(passed_days):
 			)
 		)
 
-		return available_rooms
+		return available_rooms, first_available_day_index
 
 	except TimeoutException:
 
-		return False
+		return False, first_available_day_index
 
 def main ():
+
 	try:
 		driver.get('https://www.hotel-barcelonahouse.com/')
 
@@ -201,11 +204,17 @@ def main ():
 		)
 
 		passed_days = 0
-		available_rooms = find_availability(passed_days)
+		available_rooms, first_available_day_index = find_availability(passed_days)
 
 		while not available_rooms:
-			passed_days += 1
-			available_rooms = find_availability(passed_days)
+
+			if first_available_day_index >= 30:
+				passed_days = 0
+			else:
+				passed_days += 1
+
+			available_rooms, first_available_day_index = find_availability(passed_days)
+
 
 			print('No available rooms, trying again...')
 
@@ -319,12 +328,69 @@ def main ():
 		)
 		action_chains.move_to_element(input_card_number)
 		action_chains.click()
-		action_chains.send_keys(12345678901234567).perform()
+		action_chains.send_keys('4111').perform()
+		time.sleep(2)
+		action_chains.send_keys('1111').perform()
+		time.sleep(2)
+		action_chains.send_keys('1111').perform()
+		time.sleep(2)
+		action_chains.send_keys('1111').perform()
+
+		select_expiration_date = confirmation_box.find_element(
+			By.CSS_SELECTOR,
+			'select[data-testid=fn-select-mes_caducidad]'
+		)
+
+		action_chains.move_to_element(select_expiration_date)
+		action_chains.click().perform()
+		expiration_option = select_expiration_date.find_element(
+			By.CSS_SELECTOR,
+			'option[value="11"]'
+		)
+
+		expiration_option.click()
+
+		cvc_frame = confirmation_box.find_element(
+			By.CSS_SELECTOR,
+			'iframe#iframe-cvv'
+		)
+
+		action_chains.move_to_element(cvc_frame)
+		action_chains.click()
+		action_chains.send_keys('123').perform()
+
+		accept_terms = confirmation_box.find_element(
+			By.CSS_SELECTOR,
+			'input[data-testid=fn-checkbox-aceptar_terminos]'
+		)
+		accept_terms.click()
+
+		accept_privacy = confirmation_box.find_element(
+			By.CSS_SELECTOR,
+			'input[data-testid=fn-checkbox-aceptar_privacidad]'
+		)
+		accept_privacy.click()
 
 		driver.get_screenshot_as_file(
 			'./screenshots/success/8-fill_credit_card_form.png'
 		)
 
+		confirm_btn = confirmation_box.find_element(
+			By.CSS_SELECTOR,
+			'button[data-testid=fn-confirmation-form-submit-button]'
+		)
+
+		confirm_btn.click()
+
+		WebDriverWait(driver, TIMEOUT).until(
+			EC.presence_of_element_located(
+				(By.CSS_SELECTOR, 'div.voucher')
+			)
+		)
+
+		driver.get_screenshot_as_file(
+			'./screenshots/success/9-get_voucher.png'
+		)
 
 	finally:
 		driver.get_screenshot_as_file('./screenshots/error/foo.png')
